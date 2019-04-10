@@ -1,0 +1,14 @@
+title 0.6 Single Page App - Uusi muistiinpano
+
+
+selain->palvelin: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+palvelin-->selain: statuskoodi 201, Created
+
+note over selain:
+Aiemmin selaimelle ladattu .js -koodi
+hakee sivulta lomake-elementin ja luo 
+sille tapahtumankäsittelijän tilannetta 
+hoitamaan. Tapahtumankäsittelijä sitten
+renderöi muistiinpanot näytölle.
+end note
+

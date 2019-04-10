@@ -1,0 +1,32 @@
+title 0.4 Uusi muistiinpano
+
+selain->palvelin: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+palvelin-->selain: Statuskoodi 302, redirect to /notes
+
+note over selain: 
+Selain saa palvelimelta käskyn tehdä uusi
+GET pyyntö osoitteeseen ../notes
+end note
+
+
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+palvelin-->selain: HTML-koodi
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+palvelin-->selain: main.css
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+palvelin-->selain: main.js
+
+note over selain:
+Selain alkaa suorittaa js-koodia
+joka pyytää JSON-datan palvelimelta
+end note
+
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+palvelin-->selain: [{ content: "HTML on helppoa", date: "2019-01-01" }, ...]
+
+note over selain:
+Selain suorittaa tapahtumankäsittelijän
+joka renderöi muistiinpanot näytölle.
+Listan viimenen elementti on ensimmäisessä
+vaiheessa postattu muistiinpano.
+end note
