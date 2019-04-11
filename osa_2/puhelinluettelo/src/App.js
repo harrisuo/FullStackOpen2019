@@ -65,7 +65,6 @@ const App = () => {
     setFilter(event.target.value)
   }
 
-
   const handleRemove = (id) => {
     const rightPerson = persons.find(n => n.id === id)
     personService.remove(rightPerson.id).then(returnedPerson => {
