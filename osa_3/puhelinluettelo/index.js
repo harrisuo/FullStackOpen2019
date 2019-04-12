@@ -3,8 +3,11 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 
 const app = express()
+const cors = require('cors')
+
 app.use(bodyParser.json())
 app.use(morgan('tiny'))
+app.use(cors())
 
 let persons = [
     {
@@ -35,6 +38,7 @@ const generateId = () => id = Math.floor(Math.random() * 10000)
 app.post('/api/persons', (req, res) => {
     const body = req.body
     console.log(body)
+
     if (!body.name) {
         return res.status(400).json({
             error: 'content missing'
@@ -46,7 +50,7 @@ app.post('/api/persons', (req, res) => {
         number: body.number,
         id: generateId(),
     }
-
+    console.log("backend", addedPerson)
     newPersons = persons.concat(addedPerson)
     res.json(newPersons)
 })
@@ -67,6 +71,7 @@ app.get('/info', (req, res) => {
 app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     const person = persons.find(p => p.id === id)
+
     if (person) {
         res.json(person)
     } else {
@@ -74,7 +79,7 @@ app.get('/api/persons/:id', (req, res) => {
     }
 })
 
-app.delete('/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id);
     const newPersons = persons.filter(p => p.id !== id);
 
@@ -86,7 +91,7 @@ app.delete('/persons/:id', (req, res) => {
     }
 });
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })
