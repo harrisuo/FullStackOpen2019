@@ -5,6 +5,7 @@ const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
 
+app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(morgan('tiny'))
 app.use(cors())
@@ -61,7 +62,7 @@ app.get('/api/persons', (req, res) => {
 })
 
 // Miten rivinvaihto tässä?
-app.get('/info', (req, res) => {
+app.get('/api/info', (req, res) => {
     const time = new Date()
     const str = `Puhelinluettelossa on ${persons.length} henkilön tiedot \n ${time}`
     res.send(str)

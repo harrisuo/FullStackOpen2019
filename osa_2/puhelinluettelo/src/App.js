@@ -37,8 +37,10 @@ const App = () => {
     }
 
     personService.create(newPerson).then(returnedPersons => {
-      setPersons(persons.concat(returnedPersons))
+      const addedPerson = returnedPersons.find(n => n.name === newName)
+      setPersons(persons.concat(addedPerson))
       setMessage(`Lisättiin ${newName}`)
+      console.log("frontend", addedPerson, returnedPersons)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
@@ -46,7 +48,7 @@ const App = () => {
       setNewNumber('')
       
     }).catch(error => {
-      setMessage('Tapahtui virhe')
+      setMessage(`${newName} on jo luettelossa`)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
@@ -67,22 +69,20 @@ const App = () => {
 
   const handleRemove = (id) => {
     const rightPerson = persons.find(n => n.id === id)
-    personService.remove(rightPerson.id).then(returnedPerson => {
-      setPersons(persons.filter(n => n.id !== rightPerson.id))
-    
+    personService.remove(id).then(returnedPersons => {
+      console.log("poisto:", returnedPersons)
+      setPersons(returnedPersons)
+      setMessage(`Poistettiin ${rightPerson.name}`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+
     }).catch(error => {
       setMessage(`${rightPerson.name} ei löydy luettelosta`)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
     })
-
-    setMessage(`Poistettiin ${rightPerson.name}`)
-    setTimeout(() => {
-      setMessage(null)
-    }, 5000)
-
-    setPersons(persons.filter(n => n.name !== rightPerson.name))
   }
 
   return (
