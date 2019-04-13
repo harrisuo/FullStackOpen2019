@@ -103,14 +103,11 @@ if (process.argv.length === 2) {
 } */
 
 
-
-
 const generateId = () => id = Math.floor(Math.random() * 10000)
 
 // Vaaditut tiedot: name, number
 app.post('/api/persons', (req, res) => {
     const body = req.body
-    //console.log(body)
 
     if (body.name === undefined) {
         return res.status(400).json({
@@ -118,23 +115,22 @@ app.post('/api/persons', (req, res) => {
         })
     }
 
-    const addedPerson = {
+    const person = Person({
         name: body.name,
         number: body.number,
         //id: generateId(),
-    }
-    console.log(`Lisätään ${addedPerson.name} numero ${addedPerson.number}`);
-    
-    addedPerson.save().then(savedPerson => {
-        res.json(savedPerson.toJSON())
-        console.log(`Lisätään ${addedPerson.name} numero ${addedPperson.number}`);
-        //mongoose.connection.close();
     })
 
-    /* 
-        console.log("backend", addedPerson)
-        newPersons = persons.concat(addedPerson)
-        res.json(newPersons) */
+    person.save().then(p => {
+        console.log("meneekö töhän", p)
+        res.json(p.toJSON())
+    })
+
+    console.log(`Lisätään ${person.name} numero ${person.number}`);
+
+    //console.log("backend", addedPerson)
+    //newPersons = persons.concat(addedPerson)
+    //res.json(newPersons)
 })
 
 
@@ -167,15 +163,21 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id);
-    const newPersons = persons.filter(p => p.id !== id);
+    /*     const id = Number(req.params.id);
+        const newPersons = persons.filter(p => p.id !== id);
+    
+        if (!persons.find(p => p.id === id)) {
+            res.status(404).end();
+        } else {
+            res.json(newPersons)
+            res.status(204).end();
+        } */
 
-    if (!persons.find(p => p.id === id)) {
-        res.status(404).end();
-    } else {
-        res.json(newPersons)
-        res.status(204).end();
-    }
+    Person.findById(req.params.id).then(p => {
+        console.log(p)
+        res.json(p.toJSON())
+    })
+
 });
 
 const PORT = process.env.PORT

@@ -49,7 +49,7 @@ app.post('/api/persons', (req, res) => {
     const addedPerson = {
         name: body.name,
         number: body.number,
-        id: generateId(),
+        //id: generateId(),
     }
     console.log("backend", addedPerson)
     newPersons = persons.concat(addedPerson)

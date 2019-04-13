@@ -4,10 +4,10 @@ import React from 'react'
 const Person = ({ person, handleRemove }) =>
     <li> {person.name} {person.number} <button onClick={handleRemove}>poista</button> </li>
 
-const ViewPersons = ({ persons, filter, handleRemove }) => {
+const ViewPersons = ({ persons, filt, handleRemove }) => {
 
     //case insensitiivisen filtterin toteuttaminen puuttuu vielä
-    const filteredNames = persons.filter(person => person.name.includes(filter))
+    const filteredNames = persons.filter(person => person.name.includes(filt))
 
     return (
         filteredNames.map(person =>

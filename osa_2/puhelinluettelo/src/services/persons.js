@@ -19,6 +19,7 @@ const create = (newObject) => {
     })  */
 
   const request = axios.post(baseUrl, newObject)
+  console.log("testatatan", request)
   return request.then(response => response.data)
 }
 

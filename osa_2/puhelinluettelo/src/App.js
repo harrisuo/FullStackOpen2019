@@ -22,25 +22,28 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
+    
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    }
+  
     //Estää saman nimen lisäämisen toiseen kertaan
-    if (persons.map(person => person.name).includes(newName)) {
-      setMessage(`${newName} on jo luettelossa`)
+    const nameList = persons.map(p => p.name)
+    console.log("Lista:", nameList)
+    if (nameList.includes(newPerson.name)) {
+      setMessage(`${newPerson.name} on jo luettelossa`)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
       return null
     }
 
-    const newPerson = {
-      name: newName,
-      number: newNumber,
-    }
-
     personService.create(newPerson).then(returnedPersons => {
       const addedPerson = returnedPersons.find(n => n.name === newName)
+      console.log("frontti", returnedPersons, addedPerson)
       setPersons(persons.concat(addedPerson))
       setMessage(`Lisättiin ${newName}`)
-      console.log("frontend", addedPerson, returnedPersons)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
@@ -108,7 +111,7 @@ const App = () => {
       <h2>Numerot</h2>
       <ViewPersons
         persons={persons}
-        filter={filter}
+        filt={filter}
         handleRemove={handleRemove}
       />
     </div >
