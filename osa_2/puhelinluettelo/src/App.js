@@ -22,16 +22,13 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    
     const newPerson = {
       name: newName,
       number: newNumber,
     }
-  
-    //Estää saman nimen lisäämisen toiseen kertaan
-    const nameList = persons.map(p => p.name)
-    console.log("Lista:", nameList)
-    if (nameList.includes(newPerson.name)) {
+
+    //Estä saman nimen lisäämisen toiseen kertaan
+    if (persons.map(p => p.name).includes(newPerson.name)) {
       setMessage(`${newPerson.name} on jo luettelossa`)
       setTimeout(() => {
         setMessage(null)
@@ -39,19 +36,18 @@ const App = () => {
       return null
     }
 
-    personService.create(newPerson).then(returnedPersons => {
-      const addedPerson = returnedPersons.find(n => n.name === newName)
-      console.log("frontti", returnedPersons, addedPerson)
-      setPersons(persons.concat(addedPerson))
+    personService.create(newPerson).then(returnedPerson => {
+      setPersons(persons.concat(returnedPerson))
       setMessage(`Lisättiin ${newName}`)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
       setNewName('')
       setNewNumber('')
-      
+
     }).catch(error => {
-      setMessage(`${newName} on jo luettelossa`)
+      console.log("Catchattiin error")
+      setMessage(`${newName} ei voitu lisätä luetteloon`)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
@@ -70,11 +66,11 @@ const App = () => {
     setFilter(event.target.value)
   }
 
-  const handleRemove = (id) => {
+  const handleRemove = id => {
     const rightPerson = persons.find(n => n.id === id)
     personService.remove(id).then(returnedPersons => {
       console.log("poisto:", returnedPersons)
-      setPersons(returnedPersons)
+      setPersons(persons.filter(p => p.id !== id))
       setMessage(`Poistettiin ${rightPerson.name}`)
       setTimeout(() => {
         setMessage(null)
@@ -90,7 +86,6 @@ const App = () => {
 
   return (
     <div>
-
       <Notification input={message} />
 
       <h1>Puhelinluettelo</h1>

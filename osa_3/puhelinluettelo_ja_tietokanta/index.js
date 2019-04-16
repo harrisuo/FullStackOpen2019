@@ -41,74 +41,12 @@ app.use(cors())
  */
 
 
-//Mongo
-/* const mongoose = require('mongoose')
-if (process.argv.length < 3) {
-    console.log('give password as argument')
-    process.exit(1)
-}
-
-const password = process.argv[2] */
-
-/* const mongoose = require('mongoose')
-const url = `mongodb+srv://harrisuonikko:salasana@fullstackopen-ntznl.mongodb.net/fullstackopen?retryWrites=true`
-
-mongoose.connect(url, { useNewUrlParser: true })
-
-const personSchema = new mongoose.Schema({
-    name: String,
-    number: String,
-})
-
-personSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
-    }
-})
-
-const Person = mongoose.model('Person', personSchema) */
-/* const person = new Person({
-    name: "",
-    number: "",
-}) */
-/* 
-console.log(person)
-
-if (process.argv.length === 2) {
-    app.get('/api/persons', (request, response) => {
-        Person.find({}).then(p => {
-            response.json(notes.map(p => p.toJSON()))
-        })
-    })
-    console.log("meneekö tänne 1")
-    mongoose.connection.close()
-
-} else {
-    process.argv.forEach((value, index) => {
-        //console.log(value, index)
-        if (index === 2) {
-            person.name = value
-        }
-        if (index === 3) {
-            person.number = value
-        }
-    })
-
-    person.save().then(response => {
-        console.log(`Lisätään ${person.name} numero ${person.number}`);
-        mongoose.connection.close();
-    })
-} */
-
-
-const generateId = () => id = Math.floor(Math.random() * 10000)
+//const generateId = () => id = Math.floor(Math.random() * 10000)
 
 // Vaaditut tiedot: name, number
 app.post('/api/persons', (req, res) => {
     const body = req.body
-
+    console.log(body)
     if (body.name === undefined) {
         return res.status(400).json({
             error: 'content missing'
@@ -162,7 +100,13 @@ app.get('/api/persons/:id', (req, res) => {
     })
 })
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
+    
+    Person.findByIdAndRemove(req.params.id).then(result => {
+        res.status(204).end()
+      })
+      .catch(error => next(error))
+    
     /*     const id = Number(req.params.id);
         const newPersons = persons.filter(p => p.id !== id);
     
@@ -172,12 +116,6 @@ app.delete('/api/persons/:id', (req, res) => {
             res.json(newPersons)
             res.status(204).end();
         } */
-
-    Person.findById(req.params.id).then(p => {
-        console.log(p)
-        res.json(p.toJSON())
-    })
-
 });
 
 const PORT = process.env.PORT

@@ -1,5 +1,4 @@
 import React from 'react'
-//import RenderPerson from './RenderPerson'
 
 const Person = ({ person, handleRemove }) =>
     <li> {person.name} {person.number} <button onClick={handleRemove}>poista</button> </li>
@@ -8,9 +7,11 @@ const ViewPersons = ({ persons, filt, handleRemove }) => {
 
     //case insensitiivisen filtterin toteuttaminen puuttuu vielä
     const filteredNames = persons.filter(person => person.name.includes(filt))
-
+ 
+    console.log("persons:::", persons)
+    console.log("arvot", Object.values(persons))
     return (
-        filteredNames.map(person =>
+        filteredNames.map(person => 
             <Person
                 key={person.id}
                 person={person}
