@@ -1,4 +1,3 @@
-
 require('dotenv').config()
 
 const express = require('express')
@@ -15,60 +14,27 @@ app.use(morgan('tiny'))
 app.use(cors())
 
 
-
-/* let persons = [
-    {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-    },
-    {
-        "name": "Martti Tienari",
-        "number": "040-123456",
-        "id": 2
-    },
-    {
-        "name": "Arto Järvinen",
-        "number": "040-123456",
-        "id": 3
-    },
-    {
-        "name": "Lea Kutvonen",
-        "number": "040-123456",
-        "id": 4
-    },
-]
- */
-
-
-//const generateId = () => id = Math.floor(Math.random() * 10000)
-
 // Vaaditut tiedot: name, number
 app.post('/api/persons', (req, res) => {
     const body = req.body
-    console.log(body)
-    if (body.name === undefined) {
-        return res.status(400).json({
-            error: 'content missing'
-        })
-    }
+    /*     if ((body.name === "" || body.number === "")) {
+            return res.status(400).end()
+        } */
 
     const person = Person({
         name: body.name,
         number: body.number,
-        //id: generateId(),
+        //id: Math.floor(Math.random() * 10000),
     })
 
-    person.save().then(p => {
-        console.log("meneekö töhän", p)
-        res.json(p.toJSON())
-    })
-
-    console.log(`Lisätään ${person.name} numero ${person.number}`);
-
-    //console.log("backend", addedPerson)
-    //newPersons = persons.concat(addedPerson)
-    //res.json(newPersons)
+    person
+        .save()
+        .then(savedPerson => savedPerson.toJSON())
+        .then(savedAndFormattedPerson => {
+            res.json(savedAndFormattedPerson)
+        })
+        .catch(error => next(error))
+    //console.log(`Lisätään ${person.name} numero ${person.number}`);
 })
 
 
@@ -86,37 +52,44 @@ app.get('/api/info', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    /*     const id = Number(req.params.id)
-        const person = persons.find(p => p.id === id)
-    
-        if (person) {
-            res.json(person)
-        } else {
-            res.status(404).end()
-        } */
-
     Person.findById(req.params.id).then(p => {
-        res.json(p.toJSON())
+        if (p) {
+            res.json(person.toJSON())
+        } else {
+            res.status(202).end()
+        }
     })
+    .catch(error => next(error))
 })
 
+
 app.delete('/api/persons/:id', (req, res, next) => {
-    
     Person.findByIdAndRemove(req.params.id).then(result => {
         res.status(204).end()
-      })
-      .catch(error => next(error))
-    
-    /*     const id = Number(req.params.id);
-        const newPersons = persons.filter(p => p.id !== id);
-    
-        if (!persons.find(p => p.id === id)) {
-            res.status(404).end();
-        } else {
-            res.json(newPersons)
-            res.status(204).end();
-        } */
+    })
+    .catch(error => next(error))
 });
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+
+// olemattomien osoitteiden käsittely
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+    if (error.name === 'CastError' && error.kind == 'ObjectId') {
+        return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
+    }
+    next(error)
+}
+
+// virheellisten pyyntöjen käsittely
+app.use(errorHandler)
+
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {

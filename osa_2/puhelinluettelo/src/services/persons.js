@@ -32,9 +32,7 @@ const update = (id, newObject) => {
 }
 
 const remove = id => {
-  console.log("id:", id)
   const request = axios.delete(`${baseUrl}/${id}`)
-  console.log("testiä", request.then(response => response.data))
   return request.then(response => response.data)
 };
 

@@ -47,7 +47,7 @@ const App = () => {
 
     }).catch(error => {
       console.log("Catchattiin error")
-      setMessage(`${newName} ei voitu lisätä luetteloon`)
+      setMessage("Nimi tai numero puuttuu.")
       setTimeout(() => {
         setMessage(null)
       }, 5000)
