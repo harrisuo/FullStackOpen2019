@@ -1,4 +1,6 @@
-require('dotenv').config()
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+  }
 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -15,12 +17,8 @@ app.use(cors())
 
 
 // Vaaditut tiedot: name, number
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body
-    /*     if ((body.name === "" || body.number === "")) {
-            return res.status(400).end()
-        } */
-
     const person = Person({
         name: body.name,
         number: body.number,
@@ -31,10 +29,10 @@ app.post('/api/persons', (req, res) => {
         .save()
         .then(savedPerson => savedPerson.toJSON())
         .then(savedAndFormattedPerson => {
+            console.log("meneekö tähän")
             res.json(savedAndFormattedPerson)
         })
         .catch(error => next(error))
-    //console.log(`Lisätään ${person.name} numero ${person.number}`);
 })
 
 
@@ -59,7 +57,7 @@ app.get('/api/persons/:id', (req, res) => {
             res.status(202).end()
         }
     })
-    .catch(error => next(error))
+        .catch(error => next(error))
 })
 
 
@@ -67,8 +65,9 @@ app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndRemove(req.params.id).then(result => {
         res.status(204).end()
     })
-    .catch(error => next(error))
+        .catch(error => next(error))
 });
+
 
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })

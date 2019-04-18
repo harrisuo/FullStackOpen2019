@@ -38,20 +38,20 @@ const App = () => {
 
     personService.create(newPerson).then(returnedPerson => {
       setPersons(persons.concat(returnedPerson))
-      setMessage(`Lisättiin ${newName}`)
+      setMessage(`Lisättiin ${newName}, ${newNumber}`)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
       setNewName('')
       setNewNumber('')
-
-    }).catch(error => {
-      console.log("Catchattiin error")
-      setMessage("Nimi tai numero puuttuu.")
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
     })
+      .catch(error => {
+        //setMessage(`${newName} ei voitu lisätä`)
+        setMessage(JSON.stringify(error.response.data.error))
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      })
   }
 
   const handleNewName = (event) => {
@@ -69,15 +69,15 @@ const App = () => {
   const handleRemove = id => {
     const rightPerson = persons.find(n => n.id === id)
     personService.remove(id).then(returnedPersons => {
-      console.log("poisto:", returnedPersons)
       setPersons(persons.filter(p => p.id !== id))
-      setMessage(`Poistettiin ${rightPerson.name}`)
+      setMessage(`Poistettiin ${rightPerson.name}, ${rightPerson.number}`)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
 
     }).catch(error => {
       setMessage(`${rightPerson.name} ei löydy luettelosta`)
+      //setMessage(JSON.stringify(error.response.data.error))
       setTimeout(() => {
         setMessage(null)
       }, 5000)

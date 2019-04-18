@@ -10,18 +10,6 @@ const getAll = () => {
 }
 
 const create = newObject => {
-
-  // Estää toisen samannimisen kaverin lisäämisen
-/*   getAll().then(allPersons => {
-    console.log("data:", allPersons)
-    if (allPersons.map(persons => persons.name).includes(newObject.name)) {
-      console.log("sama nimi")
-      return allPersons.reject(`${newObject.name} on jo luettelossa`)
-      //return persons.reject(new Error(`${newObject.name} on jo luettelossa`))
-    }
-  })
- */
-
   const request = axios.post(baseUrl, newObject)
   return request.then(response => response.data)
 };
